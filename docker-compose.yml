@@ -39,7 +39,7 @@ services:
       - "50052:50051"
     depends_on:
       postgres-auth:
-        condition: service_healthy
+        condition: service_started
       user-service:
         condition: service_started
       dynamodb:
@@ -62,7 +62,7 @@ services:
       - "50053:50051"
     depends_on:
       postgres-user:
-        condition: service_healthy
+        condition: service_started
     networks: 
       - health_network
 
@@ -81,7 +81,7 @@ services:
       - "50054:50051"
     depends_on:
       postgres-doctor:
-        condition: service_healthy
+        condition: service_started
     networks: 
       - health_network
 
@@ -100,7 +100,7 @@ services:
       - "50055:50051"
     depends_on:
       postgres-appointment:
-        condition: service_healthy
+        condition: service_started
       doctor-service:
         condition: service_started
     networks: 
@@ -119,6 +119,11 @@ services:
       - postgres_auth_data:/var/lib/postgresql/data
     networks:
       - health_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   postgres-user:
     image: postgres:15-alpine
@@ -133,6 +138,11 @@ services:
       - postgres_user_data:/var/lib/postgresql/data
     networks:
       - health_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   postgres-doctor:
     image: postgres:15-alpine
@@ -147,6 +157,11 @@ services:
       - postgres_doctor_data:/var/lib/postgresql/data
     networks:
       - health_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U doctor_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   postgres-appointment:
     image: postgres:15-alpine
@@ -161,6 +176,11 @@ services:
       - postgres_appointment_data:/var/lib/postgresql/data
     networks:
       - health_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appointment_user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   dynamodb:
     image: amazon/dynamodb-local
