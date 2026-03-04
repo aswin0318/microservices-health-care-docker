@@ -61,4 +61,3 @@ export default function routerFactory ({ controllers, middlewares }) {
 
   return router
 }
-
