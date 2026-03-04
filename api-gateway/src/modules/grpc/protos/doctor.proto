@@ -5,6 +5,17 @@ message Doctor {
   optional string payload = 2;
 }
 
+message DoctorList {
+  repeated Doctor doctors = 1;
+}
+
+message DoctorRequest {
+  optional string id = 1;
+  optional string payload = 2;
+}
+
 service DoctorService {
   rpc AffiliateDoctor (Doctor) returns (Doctor);
+  rpc GetAllDoctors (DoctorRequest) returns (DoctorList);
+  rpc GetDoctorById (DoctorRequest) returns (Doctor);
 }

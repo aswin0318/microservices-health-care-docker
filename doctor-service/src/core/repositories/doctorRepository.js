@@ -21,9 +21,18 @@ function doctorRepositoryFactory ({ postgresDatabase }) {
     }
   }
 
+  async function findAll () {
+    try {
+      return await Doctors.findAll()
+    } catch (error) {
+      throw new Error('Failed to fetch doctors: ' + error.message)
+    }
+  }
+
   return {
     create,
     findOneById,
+    findAll,
   }
 }
 
