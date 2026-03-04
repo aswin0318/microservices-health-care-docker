@@ -47,9 +47,29 @@ export default function appointmentControllerFactory ({ AppointmentService }) {
     }
   }
 
+  async function getAllUserAppointments ({ query }) {
+    try {
+      const { appointments } = await AppointmentService.findAllAppointments({
+        params: JSON.stringify(query || {}),
+      })
+
+      return {
+        body: appointments ? appointments.map(({ payload }) => JSON.parse(payload)) : [],
+        statusCode: 200,
+      }
+    } catch (error) {
+      return {
+        body: { error: error.message },
+        statusCode: 500,
+      }
+    }
+  }
+
   return {
     create,
     list,
     findAvailable,
+    getAllUserAppointments,
   }
 }
+

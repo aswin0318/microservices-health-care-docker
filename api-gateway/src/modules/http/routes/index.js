@@ -7,6 +7,7 @@ export default function routerFactory ({ controllers, middlewares }) {
   const { doctorController, appointmentController, userController } = controllers
   const { validateSession } = middlewares
 
+  // User routes
   router.post(
     '/users',
     wrapAction(userController.create),
@@ -17,10 +18,26 @@ export default function routerFactory ({ controllers, middlewares }) {
     wrapAction(userController.authenticate),
   )
 
+  // Doctor routes
+  router.get(
+    '/doctors',
+    wrapAction(doctorController.list),
+  )
+
+  router.get(
+    '/doctors/:id',
+    wrapAction(doctorController.getById),
+  )
+
   router.post(
     '/doctors',
     validateSession,
     wrapAction(doctorController.affiliate),
+  )
+
+  router.get(
+    '/doctors/:id/appointments/available',
+    wrapAction(appointmentController.findAvailable),
   )
 
   router.post(
@@ -29,11 +46,19 @@ export default function routerFactory ({ controllers, middlewares }) {
     wrapAction(appointmentController.create),
   )
 
+  // Appointment routes
   router.get(
-    '/doctors/:id/appointments/available',
+    '/appointments',
     validateSession,
-    wrapAction(appointmentController.findAvailable),
+    wrapAction(appointmentController.getAllUserAppointments),
+  )
+
+  router.post(
+    '/appointments',
+    validateSession,
+    wrapAction(appointmentController.create),
   )
 
   return router
 }
+
