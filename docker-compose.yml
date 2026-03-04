@@ -190,6 +190,20 @@ services:
     networks:
       - health_network
 
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NODE_ENV: development
+    container_name: frontend
+    ports:
+      - "80:80"
+    depends_on:
+      api-gateway:
+        condition: service_started
+    networks:
+      - health_network
+
 networks:
   health_network:
     driver: bridge
